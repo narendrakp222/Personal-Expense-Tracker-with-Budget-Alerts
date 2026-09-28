@@ -1,0 +1,23 @@
+body {
+  background: #f8fafc;
+}
+
+.navbar-brand {
+  font-weight: 700;
+}
+
+.card {
+  border: 0;
+  border-radius: 1rem;
+  box-shadow: 0 0.5rem 1.5rem rgba(15, 23, 42, 0.08);
+}
+
+.table {
+  background: #fff;
+}
+
+.badge.bg-success,
+.badge.bg-warning,
+.badge.bg-danger {
+  color: #111827;
+}

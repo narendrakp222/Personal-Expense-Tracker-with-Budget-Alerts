@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="mb-1">Dashboard</h1>
+    <p class="text-muted mb-0">Track expenses, budgets, and alert levels in one place.</p>
+  </div>
+</div>
+<div class="row g-3 mb-4">
+  <div class="col-md-4"><div class="card text-bg-primary h-100"><div class="card-body"><h5>Total Monthly Spending</h5><p class="fs-4 mb-0">{{ total_spent }}</p></div></div></div>
+  <div class="col-md-4"><div class="card text-bg-success h-100"><div class="card-body"><h5>Total Budget</h5><p class="fs-4 mb-0">{{ total_budget }}</p></div></div></div>
+  <div class="col-md-4"><div class="card text-bg-warning h-100"><div class="card-body"><h5>Remaining Budget</h5><p class="fs-4 mb-0">{{ remaining_budget }}</p></div></div></div>
+</div>
+<div class="card mb-4"><div class="card-body"><h5 class="mb-3">Category-wise Spending & Alerts</h5><div class="table-responsive"><table class="table align-middle"><thead><tr><th>Category</th><th>Spent</th><th>Limit</th><th>Utilization</th><th>Status</th></tr></thead><tbody>{% for row in category_rows %}<tr><td>{{ row.budget.category.name }}</td><td>{{ row.spent }}</td><td>{{ row.budget.monthly_limit }}</td><td>{{ row.utilization|floatformat:2 }}%</td><td><span class="badge bg-{{ row.alert }}">{% if row.alert == 'success' %}Normal{% elif row.alert == 'warning' %}Warning{% else %}Danger{% endif %}</span></td></tr>{% empty %}<tr><td colspan="5" class="text-center text-muted">No budgets found.</td></tr>{% endfor %}</tbody></table></div></div></div>
+<div class="row g-3"><div class="col-lg-6"><div class="card h-100"><div class="card-body"><h5 class="mb-3">Monthly Summary</h5><ul class="list-group list-group-flush">{% for item in monthly_summary %}<li class="list-group-item d-flex justify-content-between"><span>{{ item.category__name }}</span><strong>{{ item.total }}</strong></li>{% empty %}<li class="list-group-item text-muted">No expense summary available.</li>{% endfor %}</ul></div></div></div><div class="col-lg-6"><div class="card h-100"><div class="card-body"><h5 class="mb-3">Recent Expenses</h5><ul class="list-group list-group-flush">{% for expense in recent_expenses %}<li class="list-group-item d-flex justify-content-between"><span>{{ expense.date }} - {{ expense.category.name }}</span><strong>{{ expense.amount }}</strong></li>{% empty %}<li class="list-group-item text-muted">No recent expenses.</li>{% endfor %}</ul></div></div></div></div>
+{% endblock %}

@@ -1,9 +1,7 @@
-from django.urls import path
-from . import views
+from django.contrib import admin
+from django.urls import include, path
 
 urlpatterns = [
-    path("category/", views.category_list, name="category_list"),
-    path("category/create/", views.category_create, name="category_create"),
-    path("category/update/<int:id>/", views.category_update, name="category_update"),
-    path("category/delete/<int:id>/", views.category_delete, name="category_delete"),
+    path("admin/", admin.site.urls),
+    path("", include("expenses.urls")),
 ]
