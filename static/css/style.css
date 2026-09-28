@@ -1,0 +1,579 @@
+/* =========================================================
+   PERSONAL EXPENSE TRACKER
+   Global Stylesheet
+   ========================================================= */
+
+
+/* =========================================================
+   1. GLOBAL STYLES
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-color: #f8f9fa;
+    color: #212529;
+    font-family: Arial, sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+.container {
+    max-width: 1100px;
+}
+
+
+/* =========================================================
+   2. PAGE HEADER
+   ========================================================= */
+
+.page-header {
+    margin-bottom: 25px;
+}
+
+.page-header h1 {
+    margin-bottom: 5px;
+    font-size: 28px;
+    font-weight: 600;
+    color: #212529;
+}
+
+.page-header p {
+    margin-bottom: 0;
+    color: #6c757d;
+}
+
+
+/* =========================================================
+   3. BUTTONS
+   ========================================================= */
+
+.btn {
+    border-radius: 7px;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background-color: #2563eb;
+    border-color: #2563eb;
+}
+
+.btn-primary:hover {
+    background-color: #1d4ed8;
+    border-color: #1d4ed8;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #bb2d3b;
+    border-color: #bb2d3b;
+}
+
+
+/* =========================================================
+   4. EXPENSE CARD
+   ========================================================= */
+
+.expense-card {
+    background-color: #ffffff;
+    border: 1px solid #e1e5e9;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   5. EXPENSE TABLE
+   ========================================================= */
+
+.expense-table {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.expense-table thead th {
+    padding: 14px 16px;
+    background-color: #f8f9fa;
+
+    color: #6c757d;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    border-bottom: 1px solid #dee2e6;
+    white-space: nowrap;
+}
+
+.expense-table tbody td {
+    padding: 15px 16px;
+    vertical-align: middle;
+
+    border-bottom: 1px solid #eeeeee;
+}
+
+.expense-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.expense-table tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.expense-table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+
+/* =========================================================
+   6. EXPENSE DATE
+   ========================================================= */
+
+.expense-date {
+    color: #495057;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   7. EXPENSE CATEGORY
+   ========================================================= */
+
+.expense-category {
+    display: inline-block;
+
+    padding: 5px 10px;
+
+    background-color: #eef4ff;
+    color: #2563eb;
+
+    border-radius: 20px;
+
+    font-size: 13px;
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   8. EXPENSE AMOUNT
+   ========================================================= */
+
+.expense-amount {
+    color: #212529;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   9. EXPENSE NOTES
+   ========================================================= */
+
+.expense-notes {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   10. EXPENSE ACTIONS
+   ========================================================= */
+
+.expense-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 7px;
+}
+
+.expense-actions .btn {
+    font-size: 13px;
+    padding: 5px 10px;
+}
+
+.expense-actions .btn:hover {
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   11. EMPTY EXPENSE STATE
+   ========================================================= */
+
+.expense-empty {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.expense-empty-icon {
+    width: 60px;
+    height: 60px;
+
+    margin: 0 auto 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #eef4ff;
+    color: #2563eb;
+
+    border-radius: 50%;
+
+    font-size: 25px;
+}
+
+.expense-empty h4 {
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.expense-empty p {
+    margin-bottom: 20px;
+    color: #6c757d;
+}
+
+
+/* =========================================================
+   12. EXPENSE FORM
+   ========================================================= */
+
+.expense-form-card {
+    max-width: 650px;
+
+    margin: 0 auto;
+    padding: 30px;
+
+    background-color: #ffffff;
+
+    border: 1px solid #e1e5e9;
+    border-radius: 10px;
+}
+
+.expense-form-card h1 {
+    margin-bottom: 8px;
+    font-size: 27px;
+    font-weight: 600;
+}
+
+.expense-form-card > p {
+    color: #6c757d;
+    margin-bottom: 25px;
+}
+
+
+/* Form labels */
+
+.expense-form-card label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #343a40;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+/* Form fields */
+
+.expense-form-card input,
+.expense-form-card select,
+.expense-form-card textarea {
+    width: 100%;
+
+    padding: 10px 12px;
+
+    border: 1px solid #ced4da;
+    border-radius: 7px;
+
+    background-color: #ffffff;
+
+    color: #212529;
+
+    font-size: 15px;
+}
+
+
+/* Focus */
+
+.expense-form-card input:focus,
+.expense-form-card select:focus,
+.expense-form-card textarea:focus {
+    outline: none;
+
+    border-color: #2563eb;
+
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.10);
+}
+
+
+/* Textarea */
+
+.expense-form-card textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+
+/* Form paragraphs */
+
+.expense-form-card p {
+    margin-bottom: 18px;
+}
+
+
+/* Form help text */
+
+.expense-form-card .helptext {
+    display: block;
+
+    margin-top: 5px;
+
+    color: #6c757d;
+
+    font-size: 12px;
+}
+
+
+/* Form errors */
+
+.expense-form-card .errorlist {
+    margin: 5px 0 0;
+    padding: 0;
+
+    list-style: none;
+
+    color: #dc3545;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   13. FORM ACTIONS
+   ========================================================= */
+
+.expense-form-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-top: 25px;
+}
+
+
+/* =========================================================
+   14. DELETE PAGE
+   ========================================================= */
+
+.delete-card {
+    max-width: 550px;
+
+    margin: 50px auto;
+    padding: 30px;
+
+    background-color: #ffffff;
+
+    border: 1px solid #e1e5e9;
+    border-radius: 10px;
+}
+
+.delete-card h1 {
+    margin-bottom: 8px;
+
+    font-size: 26px;
+    font-weight: 600;
+
+    text-align: center;
+}
+
+.delete-card > p {
+    margin-bottom: 25px;
+
+    color: #6c757d;
+
+    text-align: center;
+}
+
+
+/* Delete icon */
+
+.delete-icon {
+    width: 60px;
+    height: 60px;
+
+    margin: 0 auto 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #fff1f2;
+    color: #dc3545;
+
+    border-radius: 50%;
+
+    font-size: 24px;
+}
+
+
+/* Delete details */
+
+.delete-details {
+    margin: 20px 0;
+    padding: 18px;
+
+    background-color: #f8f9fa;
+
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+}
+
+.delete-details div {
+    margin-bottom: 9px;
+}
+
+.delete-details div:last-child {
+    margin-bottom: 0;
+}
+
+.delete-details strong {
+    color: #343a40;
+}
+
+
+/* Delete actions */
+
+.delete-actions {
+    display: flex;
+    gap: 10px;
+}
+
+
+/* =========================================================
+   15. ALERTS
+   ========================================================= */
+
+.alert {
+    border-radius: 7px;
+}
+
+.alert-danger {
+    color: #842029;
+}
+
+
+/* =========================================================
+   16. NAVBAR
+   ========================================================= */
+
+.navbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.navbar-brand {
+    font-weight: 600;
+}
+
+.navbar .nav-link {
+    color: #495057;
+}
+
+.navbar .nav-link:hover {
+    color: #2563eb;
+}
+
+
+/* =========================================================
+   17. GENERAL CARD
+   ========================================================= */
+
+.card {
+    border-radius: 10px;
+    border-color: #e1e5e9;
+}
+
+
+/* =========================================================
+   18. RESPONSIVE DESIGN
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .page-header h1 {
+        font-size: 24px;
+    }
+
+    .expense-form-card {
+        padding: 22px;
+    }
+
+    .delete-card {
+        margin: 30px auto;
+        padding: 22px;
+    }
+
+    .expense-actions {
+        justify-content: flex-start;
+    }
+
+}
+
+
+/* =========================================================
+   19. SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 576px) {
+
+    .page-header {
+        margin-bottom: 20px;
+    }
+
+    .page-header h1 {
+        font-size: 22px;
+    }
+
+    .expense-table {
+        min-width: 700px;
+    }
+
+    .expense-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .expense-form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .expense-form-actions .btn {
+        width: 100%;
+    }
+
+    .delete-actions {
+        flex-direction: column;
+    }
+
+    .delete-actions .btn {
+        width: 100%;
+    }
+
+}
