@@ -1,23 +1,537 @@
+/* =========================
+   GOOGLE FONT
+========================= */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* =========================
+   ROOT VARIABLES
+========================= */
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+
+    --dark: #0f172a;
+    --dark-light: #1e293b;
+
+    --background: #f8fafc;
+    --card-bg: #ffffff;
+
+    --text: #0f172a;
+    --muted: #64748b;
+
+    --border: #e2e8f0;
+
+    --shadow:
+        0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+/* =========================
+   RESET
+========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-  background: #f8fafc;
+    font-family: 'Inter', sans-serif;
+    background: var(--background);
+    color: var(--text);
 }
 
-.navbar-brand {
-  font-weight: 700;
+/* =========================
+   LAYOUT
+========================= */
+.app-layout {
+    display: flex;
+    min-height: 100vh;
 }
 
+/* =========================
+   SIDEBAR
+========================= */
+.sidebar {
+    width: 260px;
+    background: var(--dark);
+    min-height: 100vh;
+
+    position: fixed;
+    left: 0;
+    top: 0;
+
+    padding: 25px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.logo {
+    color: white;
+    font-size: 1.4rem;
+    font-weight: 800;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    margin-bottom: 35px;
+}
+
+.logo i {
+    font-size: 1.6rem;
+}
+
+.nav-section {
+    flex: 1;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    text-decoration: none;
+
+    color: #cbd5e1;
+
+    padding: 14px 16px;
+
+    border-radius: 14px;
+
+    margin-bottom: 10px;
+
+    transition: all 0.3s ease;
+}
+
+.sidebar-link i {
+    font-size: 1.1rem;
+}
+
+.sidebar-link:hover {
+    background: var(--dark-light);
+    color: white;
+
+    transform: translateX(4px);
+}
+
+.logout-link:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+}
+
+/* =========================
+   CONTENT
+========================= */
+.content {
+    margin-left: 260px;
+
+    width: calc(100% - 260px);
+
+    padding: 30px;
+}
+
+/* =========================
+   TOPBAR
+========================= */
+.topbar {
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 20px 25px;
+
+    margin-bottom: 25px;
+
+    box-shadow: var(--shadow);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    background: #eff6ff;
+
+    color: var(--primary);
+
+    padding: 10px 15px;
+
+    border-radius: 12px;
+
+    font-weight: 600;
+}
+
+.user-badge i {
+    font-size: 1.2rem;
+}
+
+/* =========================
+   CARDS
+========================= */
 .card {
-  border: 0;
-  border-radius: 1rem;
-  box-shadow: 0 0.5rem 1.5rem rgba(15, 23, 42, 0.08);
+    border: none !important;
+
+    border-radius: 22px !important;
+
+    background: var(--card-bg);
+
+    box-shadow: var(--shadow);
+
+    overflow: hidden;
+
+    transition: all 0.3s ease;
 }
 
+.card:hover {
+    transform: translateY(-6px);
+}
+
+.card-header {
+    background: white !important;
+    border-bottom: 1px solid var(--border);
+    font-weight: 700;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+.btn {
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background: var(--primary);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+}
+
+.btn-warning {
+    color: white;
+}
+
+.btn-sm {
+    border-radius: 10px;
+}
+
+/* =========================
+   TABLES
+========================= */
 .table {
-  background: #fff;
+    margin-bottom: 0;
+    background: white;
 }
 
-.badge.bg-success,
-.badge.bg-warning,
-.badge.bg-danger {
-  color: #111827;
+.table thead {
+    background: #f1f5f9;
+}
+
+.table th {
+    font-weight: 700;
+    border-bottom: none;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* =========================
+   ALERTS
+========================= */
+.alert {
+    border: none;
+    border-radius: 16px;
+}
+
+.alert-success {
+    background: #dcfce7;
+}
+
+.alert-warning {
+    background: #fef3c7;
+}
+
+.alert-danger {
+    background: #fee2e2;
+}
+
+/* =========================
+   BADGES
+========================= */
+.badge {
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+/* =========================
+   FORMS
+========================= */
+.form-control,
+.form-select {
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, .15);
+}
+
+/* =========================
+   DASHBOARD STATS
+========================= */
+.stat-card {
+    color: white;
+    border-radius: 24px;
+}
+
+.stat-card h2 {
+    font-weight: 800;
+    margin-bottom: 0;
+}
+
+.stat-card p {
+    opacity: .9;
+    margin-bottom: 0;
+}
+
+.bg-gradient-primary {
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #4f46e5
+        );
+}
+
+.bg-gradient-success {
+    background:
+        linear-gradient(
+            135deg,
+            #16a34a,
+            #22c55e
+        );
+}
+
+.bg-gradient-warning {
+    background:
+        linear-gradient(
+            135deg,
+            #f59e0b,
+            #fbbf24
+        );
+}
+
+.bg-gradient-danger {
+    background:
+        linear-gradient(
+            135deg,
+            #dc2626,
+            #ef4444
+        );
+}
+
+/* =========================
+   HERO SECTION
+========================= */
+.hero-banner {
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #7c3aed
+        );
+
+    color: white;
+
+    padding: 35px;
+
+    border-radius: 24px;
+
+    margin-bottom: 25px;
+
+    box-shadow: var(--shadow);
+}
+
+.hero-banner h1 {
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.hero-banner p {
+    margin-bottom: 0;
+    opacity: 0.9;
+}
+
+/* =========================
+   PROGRESS BAR
+========================= */
+.progress {
+    height: 12px;
+    border-radius: 999px;
+}
+
+/* =========================
+   SCROLLBAR
+========================= */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 992px) {
+
+    .sidebar {
+        display: none;
+    }
+
+    .content {
+        width: 100%;
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    .topbar {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+}
+.card h5{
+    font-weight:700;
+}
+
+.card .btn{
+    flex:1;
+}
+
+.card hr{
+    opacity:.08;
+}
+
+.empty-state{
+    padding:60px 20px;
+    text-align:center;
+}
+
+.bi-folder,
+.bi-wallet2,
+.bi-receipt-cutoff{
+    opacity:.9;
+}
+.card h3{
+    font-weight:800;
+}
+
+.text-primary{
+    color:#2563eb !important;
+}
+
+.badge{
+    letter-spacing:.3px;
+}
+
+.card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 18px 40px rgba(0,0,0,.12);
+}
+canvas{
+    max-height:350px;
+}
+
+/* =========================
+   AUTH PAGES
+========================= */
+
+.auth-wrapper{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:80vh;
+}
+
+.auth-card{
+    width:100%;
+    max-width:500px;
+
+    background:white;
+
+    padding:40px;
+
+    border-radius:24px;
+
+    box-shadow:
+        0 20px 40px rgba(0,0,0,.08);
+}
+
+.auth-card h1{
+    font-weight:800;
+}
+
+.auth-card .form-control{
+    height:50px;
+}
+
+.auth-card .btn{
+    height:50px;
+    font-weight:700;
+}
+/* =========================
+   AUTH PAGES
+========================= */
+
+.auth-wrapper{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:80vh;
+}
+
+.auth-card{
+    width:100%;
+    max-width:500px;
+
+    background:white;
+
+    padding:40px;
+
+    border-radius:24px;
+
+    box-shadow:
+        0 20px 40px rgba(0,0,0,.08);
+}
+
+.auth-card h1{
+    font-weight:800;
+}
+
+.auth-card .form-control{
+    height:50px;
+}
+
+.auth-card .btn{
+    height:50px;
+    font-weight:700;
 }

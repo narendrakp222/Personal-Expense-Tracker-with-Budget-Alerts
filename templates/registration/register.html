@@ -1,7 +1,67 @@
 {% extends "base.html" %}
+
 {% block content %}
-<div class="row justify-content-center"><div class="col-md-6"><div class="card shadow-sm"><div class="card-body">
-<h2 class="mb-3">Register</h2>
-<form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary" type="submit">Register</button> <a class="btn btn-link" href="{% url 'login' %}">Login</a></form>
-</div></div></div></div>
+
+<div class="auth-wrapper">
+
+    <div class="auth-card">
+
+        <div class="text-center mb-4">
+
+            <h1 class="fw-bold">
+                Create Account 🚀
+            </h1>
+
+            <p class="text-muted">
+                Start tracking your finances today.
+            </p>
+
+        </div>
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            {% for field in form %}
+
+            <div class="mb-3">
+
+                <label class="form-label fw-semibold">
+                    {{ field.label }}
+                </label>
+
+                {{ field }}
+
+                {% if field.errors %}
+                <div class="text-danger small mt-1">
+                    {{ field.errors }}
+                </div>
+                {% endif %}
+
+            </div>
+
+            {% endfor %}
+
+            <button class="btn btn-primary w-100">
+                Create Account
+            </button>
+
+        </form>
+
+        <div class="text-center mt-4">
+
+            <span class="text-muted">
+                Already have an account?
+            </span>
+
+            <a href="{% url 'login' %}">
+                Login
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
 {% endblock %}

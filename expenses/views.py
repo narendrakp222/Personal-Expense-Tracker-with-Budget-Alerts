@@ -47,15 +47,35 @@ def _alert_level(utilization):
 @login_required
 def dashboard(request):
     current = date.today().replace(day=1)
-    budgets = Budget.objects.filter(user=request.user, month_year__year=current.year, month_year__month=current.month).select_related("category")
+
+    budgets = Budget.objects.filter(
+        user=request.user,
+        month_year__year=current.year,
+        month_year__month=current.month
+    ).select_related("category")
+
     category_rows = []
+
     total_budget = 0
     total_spent = 0
+
     for budget in budgets:
-        spent = monthly_spent_for_category(request.user, budget.category, budget.month_year)
-        utilization = float(spent / budget.monthly_limit * 100) if budget.monthly_limit else 0
+
+        spent = monthly_spent_for_category(
+            request.user,
+            budget.category,
+            budget.month_year
+        )
+
+        utilization = (
+            float(spent / budget.monthly_limit * 100)
+            if budget.monthly_limit
+            else 0
+        )
+
         total_budget += budget.monthly_limit
         total_spent += spent
+
         category_rows.append({
             "budget": budget,
             "spent": spent,
@@ -65,22 +85,51 @@ def dashboard(request):
         })
 
     monthly_summary = (
-        Expense.objects.filter(user=request.user, date__year=current.year, date__month=current.month)
+        Expense.objects.filter(
+            user=request.user,
+            date__year=current.year,
+            date__month=current.month
+        )
         .values("category__name")
         .annotate(total=Sum("amount"))
         .order_by("-total")
     )
-    recent_expenses = Expense.objects.filter(user=request.user).select_related("category")[:10]
-    return render(request, "dashboard.html", {
+
+    # -----------------------------
+    # Chart Data
+    # -----------------------------
+    chart_labels = []
+    chart_totals = []
+
+    for item in monthly_summary:
+        chart_labels.append(item["category__name"])
+        chart_totals.append(float(item["total"]))
+
+    recent_expenses = (
+        Expense.objects
+        .filter(user=request.user)
+        .select_related("category")
+        .order_by("-date")[:10]
+    )
+
+    context = {
         "total_budget": total_budget,
         "total_spent": total_spent,
         "remaining_budget": total_budget - total_spent,
         "category_rows": category_rows,
         "monthly_summary": monthly_summary,
         "recent_expenses": recent_expenses,
-    })
 
+        # Chart.js
+        "chart_labels": chart_labels,
+        "chart_totals": chart_totals,
+    }
 
+    return render(
+        request,
+        "dashboard.html",
+        context
+    )
 @login_required
 def category_list(request):
     return render(request, "category/category_list.html", {"categories": Category.objects.filter(user=request.user)})

@@ -1,16 +1,292 @@
 {% extends "base.html" %}
+
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <div>
-    <h1 class="mb-1">Dashboard</h1>
-    <p class="text-muted mb-0">Track expenses, budgets, and alert levels in one place.</p>
-  </div>
+
+<!-- Hero Section -->
+<div class="hero-banner">
+    <h1>Financial Overview 💰</h1>
+    <p>
+        Monitor spending, budgets, and financial health in real time.
+    </p>
 </div>
-<div class="row g-3 mb-4">
-  <div class="col-md-4"><div class="card text-bg-primary h-100"><div class="card-body"><h5>Total Monthly Spending</h5><p class="fs-4 mb-0">{{ total_spent }}</p></div></div></div>
-  <div class="col-md-4"><div class="card text-bg-success h-100"><div class="card-body"><h5>Total Budget</h5><p class="fs-4 mb-0">{{ total_budget }}</p></div></div></div>
-  <div class="col-md-4"><div class="card text-bg-warning h-100"><div class="card-body"><h5>Remaining Budget</h5><p class="fs-4 mb-0">{{ remaining_budget }}</p></div></div></div>
+
+<!-- Stats Cards -->
+<div class="row g-4 mb-4">
+
+    <div class="col-md-4">
+        <div class="card stat-card bg-gradient-primary">
+            <div class="card-body">
+                <small>Total Spending</small>
+                <h2>₹{{ total_spent }}</h2>
+                <p>This Month</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card stat-card bg-gradient-success">
+            <div class="card-body">
+                <small>Total Budget</small>
+                <h2>₹{{ total_budget }}</h2>
+                <p>Available Budget</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card stat-card bg-gradient-warning">
+            <div class="card-body">
+                <small>Remaining Budget</small>
+                <h2>₹{{ remaining_budget }}</h2>
+                <p>Still Available</p>
+            </div>
+        </div>
+    </div>
+
 </div>
-<div class="card mb-4"><div class="card-body"><h5 class="mb-3">Category-wise Spending & Alerts</h5><div class="table-responsive"><table class="table align-middle"><thead><tr><th>Category</th><th>Spent</th><th>Limit</th><th>Utilization</th><th>Status</th></tr></thead><tbody>{% for row in category_rows %}<tr><td>{{ row.budget.category.name }}</td><td>{{ row.spent }}</td><td>{{ row.budget.monthly_limit }}</td><td>{{ row.utilization|floatformat:2 }}%</td><td><span class="badge bg-{{ row.alert }}">{% if row.alert == 'success' %}Normal{% elif row.alert == 'warning' %}Warning{% else %}Danger{% endif %}</span></td></tr>{% empty %}<tr><td colspan="5" class="text-center text-muted">No budgets found.</td></tr>{% endfor %}</tbody></table></div></div></div>
-<div class="row g-3"><div class="col-lg-6"><div class="card h-100"><div class="card-body"><h5 class="mb-3">Monthly Summary</h5><ul class="list-group list-group-flush">{% for item in monthly_summary %}<li class="list-group-item d-flex justify-content-between"><span>{{ item.category__name }}</span><strong>{{ item.total }}</strong></li>{% empty %}<li class="list-group-item text-muted">No expense summary available.</li>{% endfor %}</ul></div></div></div><div class="col-lg-6"><div class="card h-100"><div class="card-body"><h5 class="mb-3">Recent Expenses</h5><ul class="list-group list-group-flush">{% for expense in recent_expenses %}<li class="list-group-item d-flex justify-content-between"><span>{{ expense.date }} - {{ expense.category.name }}</span><strong>{{ expense.amount }}</strong></li>{% empty %}<li class="list-group-item text-muted">No recent expenses.</li>{% endfor %}</ul></div></div></div></div>
+
+<div class="row g-4 mb-4">
+
+    <div class="col-lg-8">
+
+        <div class="card h-100">
+            <div class="card-body">
+
+                <h4 class="mb-4">
+                    Monthly Expense Analytics
+                </h4>
+
+                <canvas id="expenseChart"></canvas>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="card h-100">
+            <div class="card-body">
+
+                <h4 class="mb-4">
+                    Category Distribution
+                </h4>
+
+                <canvas id="categoryChart"></canvas>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Budget Analytics -->
+<div class="card mb-4">
+    <div class="card-body">
+
+        <h4 class="mb-4">
+            Budget Analytics
+        </h4>
+
+        <div class="table-responsive">
+
+            <table class="table align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Spent</th>
+                        <th>Budget</th>
+                        <th width="280">Utilization</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for row in category_rows %}
+                    <tr>
+
+                        <td>
+                            <strong>
+                                {{ row.budget.category.name }}
+                            </strong>
+                        </td>
+
+                        <td>
+                            ₹{{ row.spent }}
+                        </td>
+
+                        <td>
+                            ₹{{ row.budget.monthly_limit }}
+                        </td>
+
+                        <td>
+
+                            <div class="progress">
+
+                                <div
+                                    class="progress-bar
+                                    {% if row.alert == 'danger' %}
+                                        bg-danger
+                                    {% elif row.alert == 'warning' %}
+                                        bg-warning
+                                    {% else %}
+                                        bg-success
+                                    {% endif %}"
+                                    style="width: {{ row.utilization|default:0 }}%;">
+
+                                </div>
+
+                            </div>
+
+                            <small class="text-muted">
+                                {{ row.utilization|floatformat:2 }}%
+                            </small>
+
+                        </td>
+
+                        <td>
+
+                            {% if row.alert == "success" %}
+                                <span class="badge bg-success">
+                                    Safe
+                                </span>
+
+                            {% elif row.alert == "warning" %}
+                                <span class="badge bg-warning text-dark">
+                                    Near Limit
+                                </span>
+
+                            {% else %}
+                                <span class="badge bg-danger">
+                                    Exceeded
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">
+                            No budgets available.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="row g-4">
+
+    <!-- Monthly Summary -->
+    <div class="col-lg-6">
+
+        <div class="card h-100">
+
+            <div class="card-body">
+
+                <h4 class="mb-4">
+                    Monthly Summary
+                </h4>
+
+                <ul class="list-group list-group-flush">
+
+                    {% for item in monthly_summary %}
+
+                    <li class="list-group-item d-flex justify-content-between">
+
+                        <span>
+                            {{ item.category__name }}
+                        </span>
+
+                        <strong>
+                            ₹{{ item.total }}
+                        </strong>
+
+                    </li>
+
+                    {% empty %}
+
+                    <li class="list-group-item text-muted">
+                        No summary available.
+                    </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Recent Expenses -->
+    <div class="col-lg-6">
+
+        <div class="card h-100">
+
+            <div class="card-body">
+
+                <h4 class="mb-4">
+                    Recent Expenses
+                </h4>
+
+                <ul class="list-group list-group-flush">
+
+                    {% for expense in recent_expenses %}
+
+                    <li class="list-group-item d-flex justify-content-between">
+
+                        <div>
+                            <strong>
+                                {{ expense.category.name }}
+                            </strong>
+
+                            <br>
+
+                            <small class="text-muted">
+                                {{ expense.date }}
+                            </small>
+                        </div>
+
+                        <strong>
+                            ₹{{ expense.amount }}
+                        </strong>
+
+                    </li>
+
+                    {% empty %}
+
+                    <li class="list-group-item text-muted">
+                        No recent expenses.
+                    </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+{{ chart_labels|json_script:"chart-labels" }}
+{{ chart_totals|json_script:"chart-totals" }}
+
 {% endblock %}
