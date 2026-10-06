@@ -1,156 +1,490 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="hero-banner">
-    <h1>Financial Overview</h1>
-    <p>Monitor spending, budgets, and financial health in real time.</p>
+
+<div class="dashboard-page">
+
+
+<!-- =========================================
+     DASHBOARD HEADER
+     ========================================= -->
+
+<div class="dashboard-header">
+
+    <div>
+        <span class="dashboard-eyebrow">
+            FINANCIAL DASHBOARD
+        </span>
+
+        <h1>
+            Financial Overview
+        </h1>
+
+        <p>
+            Monitor your spending, budgets, and financial health in real time.
+        </p>
+    </div>
+
+    <div class="dashboard-header-icon">
+        <i class="bi bi-wallet2"></i>
+    </div>
+
 </div>
 
-<div class="row g-4 mb-4">
-    <div class="col-md-4">
-        <div class="card stat-card bg-gradient-primary">
-            <div class="card-body">
-                <small>Total Spending</small>
-                <h2>Rs. {{ total_spent }}</h2>
-                <p>This Month</p>
+
+<!-- =========================================
+     STATISTICS
+     ========================================= -->
+
+<div class="dashboard-stats">
+
+    <!-- Total Spending -->
+    <div class="dashboard-stat-card spending-card">
+
+        <div class="stat-card-top">
+
+            <div class="stat-card-icon">
+                <i class="bi bi-graph-down-arrow"></i>
             </div>
+
+            <span class="stat-card-label">
+                TOTAL SPENDING
+            </span>
+
         </div>
+
+        <h2>
+            Rs. {{ total_spent }}
+        </h2>
+
+        <p>
+            <i class="bi bi-calendar3"></i>
+            This Month
+        </p>
+
     </div>
 
-    <div class="col-md-4">
-        <div class="card stat-card bg-gradient-success">
-            <div class="card-body">
-                <small>Total Budget</small>
-                <h2>Rs. {{ total_budget }}</h2>
-                <p>Available Budget</p>
+
+    <!-- Total Budget -->
+    <div class="dashboard-stat-card budget-card">
+
+        <div class="stat-card-top">
+
+            <div class="stat-card-icon">
+                <i class="bi bi-wallet2"></i>
             </div>
+
+            <span class="stat-card-label">
+                TOTAL BUDGET
+            </span>
+
         </div>
+
+        <h2>
+            Rs. {{ total_budget }}
+        </h2>
+
+        <p>
+            <i class="bi bi-check-circle"></i>
+            Available Budget
+        </p>
+
     </div>
 
-    <div class="col-md-4">
-        <div class="card stat-card bg-gradient-warning">
-            <div class="card-body">
-                <small>Remaining Budget</small>
-                <h2>Rs. {{ remaining_budget }}</h2>
-                <p>Still Available</p>
+
+    <!-- Remaining Budget -->
+    <div class="dashboard-stat-card remaining-card">
+
+        <div class="stat-card-top">
+
+            <div class="stat-card-icon">
+                <i class="bi bi-piggy-bank"></i>
             </div>
+
+            <span class="stat-card-label">
+                REMAINING BUDGET
+            </span>
+
         </div>
+
+        <h2>
+            Rs. {{ remaining_budget }}
+        </h2>
+
+        <p>
+            <i class="bi bi-arrow-down-circle"></i>
+            Still Available
+        </p>
+
     </div>
+
 </div>
 
-<div class="row g-4 mb-4">
-    <div class="col-lg-8">
-        <div class="card h-100">
-            <div class="card-body">
-                <h4 class="mb-4">Monthly Expense Analytics</h4>
-                <canvas id="expenseChart"></canvas>
+
+<!-- =========================================
+     ANALYTICS
+     ========================================= -->
+
+<div class="dashboard-grid analytics-grid">
+
+    <!-- Monthly Expenses -->
+    <div class="dashboard-panel expense-analytics">
+
+        <div class="panel-header">
+
+            <div>
+                <span class="panel-label">
+                    SPENDING
+                </span>
+
+                <h3>
+                    Monthly Expense Analytics
+                </h3>
             </div>
+
+            <div class="panel-icon">
+                <i class="bi bi-bar-chart-line"></i>
+            </div>
+
         </div>
+
+        <div class="chart-container">
+            <canvas id="expenseChart"></canvas>
+        </div>
+
     </div>
 
-    <div class="col-lg-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h4 class="mb-4">Category Distribution</h4>
-                <canvas id="categoryChart"></canvas>
+
+    <!-- Category Distribution -->
+    <div class="dashboard-panel category-analytics">
+
+        <div class="panel-header">
+
+            <div>
+                <span class="panel-label">
+                    BREAKDOWN
+                </span>
+
+                <h3>
+                    Category Distribution
+                </h3>
             </div>
+
+            <div class="panel-icon">
+                <i class="bi bi-pie-chart"></i>
+            </div>
+
         </div>
+
+        <div class="chart-container category-chart-container">
+            <canvas id="categoryChart"></canvas>
+        </div>
+
     </div>
+
 </div>
 
-<div class="card mb-4">
-    <div class="card-body">
-        <h4 class="mb-4">Budget Analytics</h4>
 
-        <div class="table-responsive">
-            <table class="table align-middle">
-                <thead>
-                    <tr>
-                        <th>Category</th>
-                        <th>Spent</th>
-                        <th>Budget</th>
-                        <th width="280">Utilization</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in category_rows %}
-                    <tr>
-                        <td><strong>{{ row.budget.category.name }}</strong></td>
-                        <td>Rs. {{ row.spent }}</td>
-                        <td>Rs. {{ row.budget.monthly_limit }}</td>
-                        <td>
-                            <div class="progress">
-                                <div
-                                    class="progress-bar {% if row.alert == 'danger' %}bg-danger{% elif row.alert == 'warning' %}bg-warning{% else %}bg-success{% endif %}"
-                                    style="width: {{ row.progress_percent|default:0 }}%;">
-                                </div>
+<!-- =========================================
+     BUDGET ANALYTICS
+     ========================================= -->
+
+<div class="dashboard-panel budget-panel">
+
+    <div class="panel-header">
+
+        <div>
+            <span class="panel-label">
+                BUDGET MANAGEMENT
+            </span>
+
+            <h3>
+                Budget Analytics
+            </h3>
+        </div>
+
+        <div class="panel-icon">
+            <i class="bi bi-speedometer2"></i>
+        </div>
+
+    </div>
+
+
+    <div class="table-responsive">
+
+        <table class="dashboard-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Category</th>
+
+                    <th>Spent</th>
+
+                    <th>Budget</th>
+
+                    <th>Utilization</th>
+
+                    <th>Status</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for row in category_rows %}
+
+                <tr>
+
+                    <td>
+                        <strong>
+                            {{ row.budget.category.name }}
+                        </strong>
+                    </td>
+
+
+                    <td>
+                        Rs. {{ row.spent }}
+                    </td>
+
+
+                    <td>
+                        Rs. {{ row.budget.monthly_limit }}
+                    </td>
+
+
+                    <td class="utilization-cell">
+
+                        <div class="budget-progress">
+
+                            <div
+                                class="budget-progress-bar
+                                {% if row.alert == 'danger' %}
+                                    progress-danger
+                                {% elif row.alert == 'warning' %}
+                                    progress-warning
+                                {% else %}
+                                    progress-success
+                                {% endif %}"
+                                style="width: {{ row.progress_percent|default:0 }}%;">
                             </div>
-                            <small class="text-muted">{{ row.utilization|floatformat:2 }}%</small>
-                        </td>
-                        <td>
-                            {% if row.alert == "success" %}
-                                <span class="badge bg-success">Safe</span>
-                            {% elif row.alert == "warning" %}
-                                <span class="badge bg-warning text-dark">Near Limit</span>
-                            {% else %}
-                                <span class="badge bg-danger">Exceeded</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="5" class="text-center text-muted">No budgets available.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
 
-<div class="row g-4">
-    <div class="col-lg-6">
-        <div class="card h-100">
-            <div class="card-body">
-                <h4 class="mb-4">Monthly Summary</h4>
-                <ul class="list-group list-group-flush">
-                    {% for item in monthly_summary %}
-                    <li class="list-group-item d-flex justify-content-between">
-                        <span>{{ item.category__name }}</span>
-                        <strong>Rs. {{ item.total }}</strong>
-                    </li>
-                    {% empty %}
-                    <li class="list-group-item text-muted">No summary available.</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-6">
-        <div class="card h-100">
-            <div class="card-body">
-                <h4 class="mb-4">Recent Expenses</h4>
-                <ul class="list-group list-group-flush">
-                    {% for expense in recent_expenses %}
-                    <li class="list-group-item d-flex justify-content-between">
-                        <div>
-                            <strong>{{ expense.category.name }}</strong>
-                            <br>
-                            <small class="text-muted">{{ expense.date }}</small>
                         </div>
-                        <strong>Rs. {{ expense.amount }}</strong>
-                    </li>
-                    {% empty %}
-                    <li class="list-group-item text-muted">No recent expenses.</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
+
+                        <small>
+                            {{ row.utilization|floatformat:2 }}%
+                        </small>
+
+                    </td>
+
+
+                    <td>
+
+                        {% if row.alert == "success" %}
+
+                            <span class="status-badge status-safe">
+                                <i class="bi bi-check-circle-fill"></i>
+                                Safe
+                            </span>
+
+                        {% elif row.alert == "warning" %}
+
+                            <span class="status-badge status-warning">
+                                <i class="bi bi-exclamation-circle-fill"></i>
+                                Near Limit
+                            </span>
+
+                        {% else %}
+
+                            <span class="status-badge status-danger">
+                                <i class="bi bi-x-circle-fill"></i>
+                                Exceeded
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+
+                {% empty %}
+
+                <tr>
+
+                    <td
+                        colspan="5"
+                        class="empty-state"
+                    >
+                        <i class="bi bi-wallet2"></i>
+
+                        <span>
+                            No budgets available.
+                        </span>
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
     </div>
+
 </div>
+
+
+<!-- =========================================
+     LOWER DASHBOARD
+     ========================================= -->
+
+<div class="dashboard-grid lower-grid">
+
+
+    <!-- Monthly Summary -->
+    <div class="dashboard-panel">
+
+        <div class="panel-header">
+
+            <div>
+                <span class="panel-label">
+                    SPENDING BREAKDOWN
+                </span>
+
+                <h3>
+                    Monthly Summary
+                </h3>
+            </div>
+
+            <div class="panel-icon">
+                <i class="bi bi-list-ul"></i>
+            </div>
+
+        </div>
+
+
+        <div class="summary-list">
+
+            {% for item in monthly_summary %}
+
+            <div class="summary-item">
+
+                <div class="summary-category">
+
+                    <div class="summary-dot"></div>
+
+                    <span>
+                        {{ item.category__name }}
+                    </span>
+
+                </div>
+
+                <strong>
+                    Rs. {{ item.total }}
+                </strong>
+
+            </div>
+
+            {% empty %}
+
+            <div class="empty-state">
+                No summary available.
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    <!-- Recent Expenses -->
+    <div class="dashboard-panel">
+
+        <div class="panel-header">
+
+            <div>
+                <span class="panel-label">
+                    ACTIVITY
+                </span>
+
+                <h3>
+                    Recent Expenses
+                </h3>
+            </div>
+
+            <div class="panel-icon">
+                <i class="bi bi-receipt"></i>
+            </div>
+
+        </div>
+
+
+        <div class="expense-list">
+
+            {% for expense in recent_expenses %}
+
+            <div class="expense-item">
+
+                <div class="expense-info">
+
+                    <div class="expense-icon">
+                        <i class="bi bi-receipt-cutoff"></i>
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            {{ expense.category.name }}
+                        </strong>
+
+                        <small>
+                            {{ expense.date }}
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <strong class="expense-amount">
+                    Rs. {{ expense.amount }}
+                </strong>
+
+            </div>
+
+            {% empty %}
+
+            <div class="empty-state">
+                No recent expenses.
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+<!-- =========================================
+     CHART DATA
+     ========================================= -->
 
 {{ chart_labels|json_script:"chart-labels" }}
+
 {{ chart_totals|json_script:"chart-totals" }}
+
 {% endblock %}
