@@ -1,8 +1,15 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 
 from .models import Budget, Category, Expense
+
+
+class LoginForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["username"].widget.attrs["placeholder"] = "Username"
+        self.fields["password"].widget.attrs["placeholder"] = "Password"
 
 
 class UserCategoryChoiceField(forms.ModelChoiceField):
@@ -30,6 +37,17 @@ class UserScopedCategoryMixin:
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        placeholders = {
+            "username": "Choose a username",
+            "email": "Email address",
+            "password1": "Create a password",
+            "password2": "Confirm your password",
+        }
+        for field_name, placeholder in placeholders.items():
+            self.fields[field_name].widget.attrs["placeholder"] = placeholder
 
     class Meta:
         model = User
