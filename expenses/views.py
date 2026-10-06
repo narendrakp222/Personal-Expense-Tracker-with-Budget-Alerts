@@ -4,11 +4,12 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
+from django.db.models import ProtectedError
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import BudgetForm, CategoryForm, ExpenseForm, RegisterForm
-from .models import Budget, Category, Expense, monthly_spent_for_category
+from .models import Budget, Category, Expense, budget_alert_level, budget_utilization, monthly_spent_for_category
 
 
 def register_view(request):
@@ -36,14 +37,6 @@ def logout_view(request):
     return redirect("login")
 
 
-def _alert_level(utilization):
-    if utilization >= 100:
-        return "danger"
-    if utilization >= 80:
-        return "warning"
-    return "success"
-
-
 @login_required
 def dashboard(request):
     current = date.today().replace(day=1)
@@ -67,11 +60,8 @@ def dashboard(request):
             budget.month_year
         )
 
-        utilization = (
-            float(spent / budget.monthly_limit * 100)
-            if budget.monthly_limit
-            else 0
-        )
+        utilization = budget_utilization(spent, budget.monthly_limit)
+        progress_percent = min(utilization, 100)
 
         total_budget += budget.monthly_limit
         total_spent += spent
@@ -81,7 +71,8 @@ def dashboard(request):
             "spent": spent,
             "remaining": budget.monthly_limit - spent,
             "utilization": utilization,
-            "alert": _alert_level(utilization),
+            "progress_percent": progress_percent,
+            "alert": budget_alert_level(utilization),
         })
 
     monthly_summary = (
@@ -162,8 +153,11 @@ def category_update(request, id):
 def category_delete(request, id):
     obj = get_object_or_404(Category, id=id, user=request.user)
     if request.method == "POST":
-        obj.delete()
-        messages.success(request, "Category deleted.")
+        try:
+            obj.delete()
+            messages.success(request, "Category deleted.")
+        except ProtectedError:
+            messages.error(request, "Delete the expenses in this category before removing it.")
         return redirect("category_list")
     return render(request, "category/category_delete.html", {"category": obj})
 
@@ -175,8 +169,7 @@ def budget_list(request):
 
 @login_required
 def budget_create(request):
-    form = BudgetForm(request.POST or None)
-    form.fields["category"].queryset = Category.objects.filter(user=request.user)
+    form = BudgetForm(request.POST or None, user=request.user)
     if request.method == "POST" and form.is_valid():
         obj = form.save(commit=False)
         obj.user = request.user
@@ -189,8 +182,7 @@ def budget_create(request):
 @login_required
 def budget_update(request, id):
     obj = get_object_or_404(Budget, id=id, user=request.user)
-    form = BudgetForm(request.POST or None, instance=obj)
-    form.fields["category"].queryset = Category.objects.filter(user=request.user)
+    form = BudgetForm(request.POST or None, instance=obj, user=request.user)
     if request.method == "POST" and form.is_valid():
         form.save()
         messages.success(request, "Budget updated.")
@@ -215,22 +207,20 @@ def expense_list(request):
 
 @login_required
 def expense_create(request):
-    form = ExpenseForm(request.POST or None)
-    form.fields["category"].queryset = Category.objects.filter(user=request.user)
+    form = ExpenseForm(request.POST or None, user=request.user)
     if request.method == "POST" and form.is_valid():
         obj = form.save(commit=False)
         obj.user = request.user
         obj.save()
         messages.success(request, "Expense saved.")
-        return redirect("expense_list")
+        return redirect("dashboard")
     return render(request, "expense/expense_create.html", {"form": form})
 
 
 @login_required
 def expense_update(request, id):
     obj = get_object_or_404(Expense, id=id, user=request.user)
-    form = ExpenseForm(request.POST or None, instance=obj)
-    form.fields["category"].queryset = Category.objects.filter(user=request.user)
+    form = ExpenseForm(request.POST or None, instance=obj, user=request.user)
     if request.method == "POST" and form.is_valid():
         form.save()
         messages.success(request, "Expense updated.")

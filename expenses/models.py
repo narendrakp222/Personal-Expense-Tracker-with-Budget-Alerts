@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -29,6 +31,8 @@ class Budget(models.Model):
         ordering = ["-month_year", "category__name"]
 
     def clean(self):
+        if self.monthly_limit is not None and self.monthly_limit <= 0:
+            raise ValidationError({"monthly_limit": "Monthly limit must be greater than zero."})
         if self.category_id and self.user_id and self.category.user_id != self.user_id:
             raise ValidationError({"category": "Category must belong to the same user."})
 
@@ -63,5 +67,19 @@ def monthly_spent_for_category(user, category, month_year):
             category=category,
             date__year=month_year.year,
             date__month=month_year.month,
-        ).aggregate(total=Sum("amount"))["total"] or 0
+        ).aggregate(total=Sum("amount"))["total"] or Decimal("0.00")
     )
+
+
+def budget_alert_level(utilization):
+    if utilization >= 100:
+        return "danger"
+    if utilization >= 80:
+        return "warning"
+    return "success"
+
+
+def budget_utilization(spent, monthly_limit):
+    if not monthly_limit:
+        return Decimal("0")
+    return spent / monthly_limit * Decimal("100")

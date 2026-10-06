@@ -5,6 +5,29 @@ from django.contrib.auth.models import User
 from .models import Budget, Category, Expense
 
 
+class UserCategoryChoiceField(forms.ModelChoiceField):
+    def to_python(self, value):
+        if value in self.empty_values:
+            return None
+
+        try:
+            return super().to_python(value)
+        except forms.ValidationError as exc:
+            try:
+                return self.queryset.get(name=value)
+            except Category.DoesNotExist:
+                raise exc
+
+
+class UserScopedCategoryMixin:
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if user is not None:
+            self.fields["category"].queryset = Category.objects.filter(user=user)
+        else:
+            self.fields["category"].queryset = Category.objects.all()
+
+
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
@@ -23,25 +46,48 @@ class CategoryForm(forms.ModelForm):
         }
 
 
-class BudgetForm(forms.ModelForm):
+class BudgetForm(UserScopedCategoryMixin, forms.ModelForm):
+    category = UserCategoryChoiceField(
+        queryset=Category.objects.none(),
+        widget=forms.Select(attrs={"class": "form-select"}),
+    )
+    month_year = forms.DateField(
+        input_formats=["%Y-%m", "%Y-%m-%d"],
+        widget=forms.DateInput(attrs={"class": "form-control", "type": "month"}, format="%Y-%m"),
+    )
+
     class Meta:
         model = Budget
         fields = ["category", "monthly_limit", "month_year"]
         widgets = {
-            "category": forms.Select(attrs={"class": "form-select"}),
             "monthly_limit": forms.NumberInput(attrs={"class": "form-control", "step": "0.01", "min": "0.01"}),
-            "month_year": forms.DateInput(attrs={"class": "form-control", "type": "month"}),
         }
 
+    def clean_monthly_limit(self):
+        monthly_limit = self.cleaned_data.get("monthly_limit")
+        if monthly_limit is None or monthly_limit <= 0:
+            raise forms.ValidationError("Monthly limit must be greater than zero.")
+        return monthly_limit
 
-class ExpenseForm(forms.ModelForm):
+    def clean_month_year(self):
+        month_year = self.cleaned_data.get("month_year")
+        if month_year:
+            return month_year.replace(day=1)
+        return month_year
+
+
+class ExpenseForm(UserScopedCategoryMixin, forms.ModelForm):
+    category = UserCategoryChoiceField(
+        queryset=Category.objects.none(),
+        widget=forms.Select(attrs={"class": "form-select"}),
+    )
+
     class Meta:
         model = Expense
         fields = ["amount", "date", "category", "notes"]
         widgets = {
             "amount": forms.NumberInput(attrs={"class": "form-control", "step": "0.01", "min": "0.01"}),
             "date": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
-            "category": forms.Select(attrs={"class": "form-select"}),
             "notes": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
         }
 

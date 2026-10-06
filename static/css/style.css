@@ -136,6 +136,11 @@ body {
     padding: 30px;
 }
 
+.auth-content {
+    min-height: 100vh;
+    padding: 30px;
+}
+
 /* =========================
    TOPBAR
 ========================= */
