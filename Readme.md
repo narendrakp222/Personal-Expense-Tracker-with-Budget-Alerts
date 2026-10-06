@@ -1,112 +1,87 @@
+
+
 # Personal Expense Tracker with Budget Alerts
 
-A modern Django-based Personal Expense Tracker that helps users manage daily expenses, set monthly budgets, and receive visual alerts when spending approaches or exceeds predefined limits.
+A Django-based web application for managing personal expenses, budgets, and spending.
 
 ## Features
 
-### User Authentication
+* User authentication
+* Category management
+* Expense management
+* Monthly budgets
+* Category-wise budgets
+* Budget alerts
+* Spending dashboard
+* Expense history
+* Chart.js analytics
 
-* User Registration
-* User Login
-* User Logout
-* Secure user-specific data isolation
+## Budget Alerts
 
-### Category Management
+* **Safe:** Below 80%
+* **Warning:** 80%–99%
+* **Danger:** 100% or above
 
-* Create Categories
-* View Categories
-* Update Categories
-* Delete Categories
+## Tech Stack
 
-### Budget Management
-
-* Set Monthly Budget Limits
-* Update Budget Limits
-* Category-wise Budget Tracking
-* Monthly Budget Records
-
-### Expense Management
-
-* Add Expenses
-* Edit Expenses
-* Delete Expenses
-* Expense History Tracking
-* Optional Notes Support
-
-### Dashboard Analytics
-
-* Total Monthly Spending
-* Total Monthly Budget
-* Remaining Budget
-* Category-wise Spending Summary
-* Recent Expense Activity
-* Budget Utilization Tracking
-* Chart.js Analytics Dashboard
-
-### Budget Alert System
-
-* Safe Status (< 80%)
-* Warning Status (≥ 80%)
-* Danger Status (≥ 100%)
-
-## Technology Stack
-
-### Backend
-
+* Python
 * Django
 * SQLite
-
-### Frontend
-
-* Django Templates
 * Bootstrap 5
-* Bootstrap Icons
-* Custom CSS
+* JavaScript
 * Chart.js
 
-### Database
+## Architecture
 
-* SQLite
+```text
+                User
+                 |
+                 v
+        +------------------+
+        |  Django Templates |
+        |   Bootstrap / JS  |
+        +--------+---------+
+                 |
+                 v
+        +------------------+
+        |   Django Views   |
+        +--------+---------+
+                 |
+        +--------+---------+
+        |                  |
+        v                  v
+   Forms / Auth        Business Logic
+        |                  |
+        +--------+---------+
+                 |
+                 v
+        +------------------+
+        |    Django ORM    |
+        +--------+---------+
+                 |
+                 v
+        +------------------+
+        |      SQLite      |
+        +------------------+
+```
 
 ## Project Structure
 
 ```text
 expense_tracker/
-│
 ├── expense_tracker/
 │   ├── settings.py
-│   ├── urls.py
-│   ├── asgi.py
-│   └── wsgi.py
+│   └── urls.py
 │
 ├── expenses/
-│   ├── migrations/
-│   ├── forms.py
 │   ├── models.py
 │   ├── views.py
+│   ├── forms.py
 │   ├── urls.py
-│   ├── admin.py
 │   └── tests.py
 │
 ├── templates/
-│   ├── registration/
-│   │   ├── login.html
-│   │   └── register.html
-│   │
-│   ├── category/
-│   ├── budget/
-│   ├── expense/
-│   ├── base.html
-│   └── dashboard.html
-│
 ├── static/
-│   ├── css/
-│   │   └── style.css
-│   │
-│   └── js/
-│       └── script.js
-│
-├── db.sqlite3
 ├── manage.py
 ├── requirements.txt
 └── README.md
@@ -114,113 +89,31 @@ expense_tracker/
 
 ## Installation
 
-### 1. Clone Repository
-
 ```bash
-git clone <repository-url>
-cd expense_tracker
-```
+git clone https://github.com/narendrakp222/Personal-Expense-Tracker-with-Budget-Alerts.git
+cd Personal-Expense-Tracker-with-Budget-Alerts
 
-### 2. Create Virtual Environment
-
-```bash
 python -m venv venv
-```
-
-### 3. Activate Environment
-
-Windows:
-
-```bash
-venv\Scripts\activate
-```
-
-Linux / Mac:
-
-```bash
 source venv/bin/activate
-```
 
-### 4. Install Dependencies
-
-```bash
 pip install -r requirements.txt
-```
-
-### 5. Apply Migrations
-
-```bash
-python manage.py makemigrations
 python manage.py migrate
-```
-
-### 6. Create Superuser
-
-```bash
-python manage.py createsuperuser
-```
-
-### 7. Run Development Server
-
-```bash
 python manage.py runserver
 ```
 
-Visit:
+Open:
 
 ```text
 http://127.0.0.1:8000/
 ```
 
-## Security Features
-
-* Login Required for Protected Pages
-* User-specific Data Access
-* Secure CRUD Operations
-* Category Isolation
-* Budget Isolation
-* Expense Isolation
-
-## Validation Rules
-
-### Expense Validation
-
-* Amount must be greater than zero
-* Negative values are rejected
-* Zero values are rejected
-
-### Authorization Rules
-
-* Users can only access their own data
-* Unauthorized records return 404
-* Protected routes require authentication
-
 ## Testing
-
-Run tests using:
 
 ```bash
 python manage.py test
 ```
 
-## Future Enhancements
+## Hackathon
 
-* Export Expenses to CSV
-* PDF Reports
-* Dark Mode
-* Monthly Email Reports
-* AI Spending Insights
-* Recurring Expenses
-* Advanced Charts
+**SVCET Hackathon — Powered by LEARNSQUARE**
 
-## Developed For
-
-SVCET Hackathon – Powered by LEARNSQUARE
-
-### Theme
-
-Personal Expense Tracker with Budget Alerts
-
-### Team
-
-🦏 Rangers

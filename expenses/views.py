@@ -3,12 +3,11 @@ from datetime import date
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm
 from django.db.models import ProtectedError
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .forms import BudgetForm, CategoryForm, ExpenseForm, RegisterForm
+from .forms import BudgetForm, CategoryForm, ExpenseForm, LoginForm, RegisterForm
 from .models import Budget, Category, Expense, budget_alert_level, budget_utilization, monthly_spent_for_category
 
 
@@ -23,7 +22,7 @@ def register_view(request):
 
 
 def login_view(request):
-    form = AuthenticationForm(request, data=request.POST or None)
+    form = LoginForm(request, data=request.POST or None)
     if request.method == "POST" and form.is_valid():
         login(request, form.get_user())
         messages.success(request, "Logged in successfully.")
