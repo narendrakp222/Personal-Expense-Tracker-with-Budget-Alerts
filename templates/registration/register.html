@@ -1,56 +1,310 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 
-<div class="auth-wrapper">
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
 
-    <div class="auth-card">
+<div class="register-page">
 
-        <div class="text-center mb-4">
+    <!-- =========================================
+         LEFT SIDE - BRANDING
+         ========================================= -->
 
-            <h1 class="fw-bold">
+    <div class="register-brand">
+
+        <!-- Logo -->
+
+        <div class="brand-logo">
+
+            <div class="wallet-icon">
+                ₹
+            </div>
+
+            <div class="brand-name">
+                <span>Expense</span>
+                <span>Tracker</span>
+            </div>
+
+        </div>
+
+
+        <!-- Main Heading -->
+
+        <h1>
+            Create Your<br>
+            Account
+        </h1>
+
+
+        <p class="brand-description">
+            Join Expense Tracker and start
+            your financial journey today.
+        </p>
+
+
+        <!-- =====================================
+             ILLUSTRATION
+             ===================================== -->
+
+        <div class="finance-illustration">
+
+            <!-- Chart -->
+
+            <div class="chart-card">
+
+                <div class="chart-title"></div>
+
+                <div class="chart-bars">
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Wallet -->
+
+            <div class="wallet-large">
+                ₹
+            </div>
+
+
+            <!-- Coins -->
+
+            <div class="coin coin-one">
+                ₹
+            </div>
+
+            <div class="coin coin-two">
+                ₹
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             BENEFITS
+             ===================================== -->
+
+        <div class="register-benefits">
+
+
+            <!-- Benefit 1 -->
+
+            <div class="benefit">
+
+                <div class="benefit-icon">
+                    ✓
+                </div>
+
+                <div>
+                    <h3>100% Free</h3>
+
+                    <p>
+                        No hidden charges
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!-- Benefit 2 -->
+
+            <div class="benefit">
+
+                <div class="benefit-icon">
+                    ✓
+                </div>
+
+                <div>
+                    <h3>Your Data is Safe</h3>
+
+                    <p>
+                        We value your privacy
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!-- Benefit 3 -->
+
+            <div class="benefit">
+
+                <div class="benefit-icon">
+                    ⚡
+                </div>
+
+                <div>
+                    <h3>Get Started in Seconds</h3>
+
+                    <p>
+                        Simple and quick registration
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         RIGHT SIDE - REGISTRATION CARD
+         ========================================= -->
+
+    <div class="register-card">
+
+
+        <!-- Header -->
+
+        <div class="register-header">
+
+            <h1>
                 Create Account
             </h1>
 
-            <p class="text-muted">
-                Start tracking your finances today.
+            <p>
+                Fill in your details to get started
             </p>
 
         </div>
 
-        <form method="post">
+
+        <!-- =====================================
+             DJANGO REGISTRATION FORM
+             ===================================== -->
+
+        <form
+            method="post"
+            class="register-form"
+        >
 
             {% csrf_token %}
 
+
             {% for field in form %}
 
-            <div class="mb-3">
+            <div class="register-field">
 
-                <label class="form-label fw-semibold">
+
+                <!-- Label -->
+
+                <label
+                    for="{{ field.id_for_label }}"
+                >
                     {{ field.label }}
                 </label>
 
-                {{ field }}
+
+                <!-- Input -->
+
+                <div class="input-wrapper">
+
+
+                    {% if field.name == "username" %}
+
+                        <span class="input-icon">
+                            👤
+                        </span>
+
+
+                    {% elif field.name == "email" %}
+
+                        <span class="input-icon">
+                            ✉
+                        </span>
+
+
+                    {% elif field.name == "password1" %}
+
+                        <span class="input-icon">
+                            🔒
+                        </span>
+
+
+                    {% elif field.name == "password2" %}
+
+                        <span class="input-icon">
+                            🔒
+                        </span>
+
+                    {% endif %}
+
+
+                    {{ field }}
+
+
+                    <!-- Password visibility icon -->
+
+                    {% if field.name == "password1" or field.name == "password2" %}
+
+                        <span
+                            class="password-eye"
+                            onclick="togglePassword(this)"
+                        >
+                            👁
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Help text -->
+
+                {% if field.help_text %}
+
+                <div class="field-help">
+                    {{ field.help_text }}
+                </div>
+
+                {% endif %}
+
+
+                <!-- Errors -->
 
                 {% if field.errors %}
-                <div class="text-danger small mt-1">
+
+                <div class="field-error">
                     {{ field.errors }}
                 </div>
+
                 {% endif %}
+
 
             </div>
 
             {% endfor %}
 
-            <button class="btn btn-primary w-100">
+
+            <!-- =================================
+                 CREATE ACCOUNT BUTTON
+                 ================================= -->
+
+            <button
+                type="submit"
+                class="register-button"
+            >
                 Create Account
             </button>
 
         </form>
 
-        <div class="text-center mt-4">
 
-            <span class="text-muted">
+        <!-- =================================
+             LOGIN LINK
+             ================================= -->
+
+        <div class="login-link">
+
+            <span>
                 Already have an account?
             </span>
 
@@ -60,8 +314,47 @@
 
         </div>
 
+
     </div>
 
 </div>
+
+
+<!-- =========================================
+     PASSWORD VISIBILITY
+     ========================================= -->
+
+<script>
+
+function togglePassword(button) {
+
+    const input =
+        button.parentElement.querySelector(
+            'input'
+        );
+
+
+    if (!input) {
+        return;
+    }
+
+
+    if (input.type === "password") {
+
+        input.type = "text";
+
+        button.textContent = "🙈";
+
+    } else {
+
+        input.type = "password";
+
+        button.textContent = "👁";
+
+    }
+
+}
+
+</script>
 
 {% endblock %}
