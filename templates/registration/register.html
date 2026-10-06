@@ -211,28 +211,28 @@
                     {% if field.name == "username" %}
 
                         <span class="input-icon">
-                            👤
+                            <i class="bi bi-person"></i>
                         </span>
 
 
                     {% elif field.name == "email" %}
 
                         <span class="input-icon">
-                            ✉
+                            <i class="bi bi-envelope"></i>
                         </span>
 
 
                     {% elif field.name == "password1" %}
 
                         <span class="input-icon">
-                            🔒
+                            <i class="bi bi-lock"></i>
                         </span>
 
 
                     {% elif field.name == "password2" %}
 
                         <span class="input-icon">
-                            🔒
+                            <i class="bi bi-shield-lock"></i>
                         </span>
 
                     {% endif %}
@@ -249,7 +249,7 @@
                             class="password-eye"
                             onclick="togglePassword(this)"
                         >
-                            👁
+                            <i class="bi bi-eye"></i>
                         </span>
 
                     {% endif %}
@@ -343,13 +343,13 @@ function togglePassword(button) {
 
         input.type = "text";
 
-        button.textContent = "🙈";
+        button.querySelector("i").className = "bi bi-eye-slash";
 
     } else {
 
         input.type = "password";
 
-        button.textContent = "👁";
+        button.querySelector("i").className = "bi bi-eye";
 
     }
 

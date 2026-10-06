@@ -130,19 +130,19 @@
                     {% if field.name == "username" %}
 
                         <span class="input-icon">
-                            👤
+                            <i class="bi bi-person"></i>
                         </span>
 
                     {% elif field.name == "email" %}
 
                         <span class="input-icon">
-                            ✉
+                            <i class="bi bi-envelope"></i>
                         </span>
 
                     {% elif field.name == "password" %}
 
                         <span class="input-icon">
-                            🔒
+                            <i class="bi bi-lock"></i>
                         </span>
 
                     {% endif %}
@@ -164,8 +164,8 @@
                             onclick="togglePasswordVisibility()"
                             aria-label="Show password"
                         >
-                            👁
-                        </button>
+                        <i class="bi bi-eye" id="togglePassword-icon"></i>
+                    </button>
 
                     {% endif %}
 
@@ -220,20 +220,17 @@
                     <input
                         type="checkbox"
                         name="remember_me"
+                        id="id_remember_me"
                     >
 
-                    <span>
-                        Remember me
-                    </span>
+                <span>
+                    Stay signed in
+                </span>
 
                 </label>
 
 
-                <a href="#">
-                    Forgot password?
-                </a>
-
-            </div>
+                            </div>
 
 
             <!-- Login Button -->
@@ -291,7 +288,7 @@ function togglePasswordVisibility() {
 
         passwordInput.type = "text";
 
-        toggle.textContent = "🙈";
+        toggle.querySelector("i").className = "bi bi-eye-slash";
 
         toggle.setAttribute(
             "aria-label",
@@ -304,7 +301,7 @@ function togglePasswordVisibility() {
 
         passwordInput.type = "password";
 
-        toggle.textContent = "👁";
+        toggle.querySelector("i").className = "bi bi-eye";
 
         toggle.setAttribute(
             "aria-label",

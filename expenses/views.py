@@ -25,15 +25,21 @@ def login_view(request):
     form = LoginForm(request, data=request.POST or None)
     if request.method == "POST" and form.is_valid():
         login(request, form.get_user())
+        if not request.POST.get("remember_me"):
+            # Expire the session when the browser closes.
+            request.session.set_expiry(0)
         messages.success(request, "Logged in successfully.")
         return redirect("dashboard")
     return render(request, "registration/login.html", {"form": form})
 
 
+@login_required
 def logout_view(request):
-    logout(request)
-    messages.info(request, "You have been logged out.")
-    return redirect("login")
+    if request.method == "POST":
+        logout(request)
+        messages.info(request, "You have been logged out.")
+        return redirect("login")
+    return redirect("dashboard")
 
 
 @login_required
