@@ -1,61 +1,263 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 
-<div class="auth-wrapper">
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
 
-    <div class="auth-card">
+<div class="login-page">
 
-        <div class="text-center mb-4">
+    <!-- ================= LEFT BRAND SECTION ================= -->
 
-            <h1 class="fw-bold">
-                Welcome Back
+    <div class="login-brand">
+
+        <div class="brand-logo">
+
+            <div class="wallet-icon">
+                ₹
+            </div>
+
+            <div class="brand-name">
+                <span>Expense</span>
+                <span>Tracker</span>
+            </div>
+
+        </div>
+
+
+        <div class="brand-content">
+
+            <h1>
+                Take Control<br>
+                of Your Finances
             </h1>
 
-            <p class="text-muted">
-                Login to manage your expenses and budgets.
+            <p class="brand-description">
+                Track expenses, manage budgets<br>
+                and build a better tomorrow.
             </p>
 
         </div>
 
-        <form method="post">
+
+        <!-- Features -->
+
+        <div class="login-features">
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    ✓
+                </div>
+
+                <div class="feature-content">
+                    <h3>Track Expenses</h3>
+                    <p>Know where your money goes</p>
+                </div>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    ✓
+                </div>
+
+                <div class="feature-content">
+                    <h3>Set Budgets</h3>
+                    <p>Stay on track every month</p>
+                </div>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    ✓
+                </div>
+
+                <div class="feature-content">
+                    <h3>Achieve Goals</h3>
+                    <p>Build a brighter financial future</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= LOGIN CARD ================= -->
+
+    <div class="login-card">
+
+        <div class="login-header">
+
+            <h1>
+                Welcome Back!
+            </h1>
+
+            <p>
+                Login to your Expense Tracker account
+            </p>
+
+        </div>
+
+
+        <!-- Login Form -->
+
+        <form method="post" class="login-form">
 
             {% csrf_token %}
 
+
             {% for field in form %}
 
-            <div class="mb-3">
+            <div class="login-field">
 
-                <label class="form-label fw-semibold">
+                <label for="{{ field.id_for_label }}">
                     {{ field.label }}
                 </label>
 
-                {{ field }}
+
+                <div class="input-wrapper">
+
+                    <!-- Username Icon -->
+
+                    {% if field.name == "username" %}
+
+                        <span class="input-icon">
+                            👤
+                        </span>
+
+                    {% elif field.name == "email" %}
+
+                        <span class="input-icon">
+                            ✉
+                        </span>
+
+                    {% elif field.name == "password" %}
+
+                        <span class="input-icon">
+                            🔒
+                        </span>
+
+                    {% endif %}
+
+
+                    <!-- Django Input -->
+
+                    {{ field }}
+
+
+                    <!-- Password Toggle -->
+
+                    {% if field.name == "password" %}
+
+                        <button
+                            type="button"
+                            class="password-eye"
+                            id="togglePassword"
+                            onclick="togglePasswordVisibility()"
+                            aria-label="Show password"
+                        >
+                            👁
+                        </button>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Field Errors -->
 
                 {% if field.errors %}
-                <div class="text-danger small mt-1">
+
+                <div class="field-error">
                     {{ field.errors }}
                 </div>
+
+                {% endif %}
+
+
+                <!-- Help Text -->
+
+                {% if field.help_text %}
+
+                <div class="field-help">
+                    {{ field.help_text }}
+                </div>
+
                 {% endif %}
 
             </div>
 
             {% endfor %}
 
-            <button class="btn btn-primary w-100">
+
+            <!-- Non Field Errors -->
+
+            {% if form.non_field_errors %}
+
+            <div class="form-error">
+
+                {{ form.non_field_errors }}
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- Login Options -->
+
+            <div class="login-options">
+
+                <label class="remember">
+
+                    <input
+                        type="checkbox"
+                        name="remember_me"
+                    >
+
+                    <span>
+                        Remember me
+                    </span>
+
+                </label>
+
+
+                <a href="#">
+                    Forgot password?
+                </a>
+
+            </div>
+
+
+            <!-- Login Button -->
+
+            <button
+                type="submit"
+                class="login-button"
+            >
                 Login
             </button>
 
         </form>
 
-        <div class="text-center mt-4">
 
-            <span class="text-muted">
+        <!-- Register -->
+
+        <div class="register-link">
+
+            <span>
                 Don't have an account?
             </span>
 
             <a href="{% url 'register' %}">
-                Register
+                Sign Up
             </a>
 
         </div>
@@ -63,5 +265,56 @@
     </div>
 
 </div>
+
+
+<!-- ================= PASSWORD SCRIPT ================= -->
+
+<script>
+
+function togglePasswordVisibility() {
+
+    const passwordInput =
+        document.querySelector(
+            'input[type="password"], input[name="password"]'
+        );
+
+    const toggle =
+        document.getElementById("togglePassword");
+
+
+    if (!passwordInput || !toggle) {
+        return;
+    }
+
+
+    if (passwordInput.type === "password") {
+
+        passwordInput.type = "text";
+
+        toggle.textContent = "🙈";
+
+        toggle.setAttribute(
+            "aria-label",
+            "Hide password"
+        );
+
+    }
+
+    else {
+
+        passwordInput.type = "password";
+
+        toggle.textContent = "👁";
+
+        toggle.setAttribute(
+            "aria-label",
+            "Show password"
+        );
+
+    }
+
+}
+
+</script>
 
 {% endblock %}
